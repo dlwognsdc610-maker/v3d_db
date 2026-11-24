@@ -1,0 +1,188 @@
+python3 review.py all
+SQLite 3.46.1 / Python sqlite3
+Each section starts with schema.sql + seed.sql, before Q14/Q15.
+
+=== schema ===
+
+SELECT 'developers' AS table_name, name AS column_name, type
+FROM pragma_table_info('developers')
+UNION ALL
+SELECT 'patches', name, type FROM pragma_table_info('patches')
+UNION ALL
+SELECT 'test_runs', name, type FROM pragma_table_info('test_runs')
+UNION ALL
+SELECT 'reviews', name, type FROM pragma_table_info('reviews');
+table_name | column_name   | type
+-----------+---------------+--------
+developers | id            | INTEGER
+developers | name          | TEXT
+developers | role          | TEXT
+developers | joined_at     | TEXT
+patches    | id            | INTEGER
+patches    | developer_id  | INTEGER
+patches    | title         | TEXT
+patches    | component     | TEXT
+patches    | status        | TEXT
+patches    | created_at    | TEXT
+patches    | lines_changed | INTEGER
+test_runs  | id            | INTEGER
+test_runs  | patch_id      | INTEGER
+test_runs  | device        | TEXT
+test_runs  | suite         | TEXT
+test_runs  | passed        | INTEGER
+test_runs  | failed        | INTEGER
+test_runs  | duration_sec  | REAL
+test_runs  | run_at        | TEXT
+reviews    | id            | INTEGER
+reviews    | patch_id      | INTEGER
+reviews    | reviewer_id   | INTEGER
+reviews    | verdict       | TEXT
+reviews    | comment       | TEXT
+reviews    | reviewed_at   | TEXT
+
+SELECT 'developers' AS table_name, COUNT(*) AS rows FROM developers
+UNION ALL SELECT 'patches', COUNT(*) FROM patches
+UNION ALL SELECT 'test_runs', COUNT(*) FROM test_runs
+UNION ALL SELECT 'reviews', COUNT(*) FROM reviews;
+table_name | rows
+-----------+-----
+developers | 10
+patches    | 12
+test_runs  | 14
+reviews    | 12
+
+PASS schema
+
+=== joins ===
+
+INNER JOIN: developers with matching patches
+
+SELECT d.name, COUNT(p.id) AS patch_count
+FROM developers AS d
+INNER JOIN patches AS p ON p.developer_id = d.id
+GROUP BY d.id, d.name
+ORDER BY d.id;
+name | patch_count
+-----+------------
+Jae  | 2
+Mina | 2
+Alex | 2
+Sam  | 2
+Lena | 2
+Theo | 2
+
+LEFT JOIN: all developers
+
+SELECT d.name, COUNT(p.id) AS patch_count
+FROM developers AS d
+LEFT JOIN patches AS p ON p.developer_id = d.id
+GROUP BY d.id, d.name
+ORDER BY d.id;
+name | patch_count
+-----+------------
+Jae  | 2
+Mina | 2
+Alex | 2
+Iris | 0
+Sam  | 2
+Noah | 0
+Lena | 2
+Jun  | 0
+Maya | 0
+Theo | 2
+
+COUNT(*) and COUNT(p.id) for Iris
+
+SELECT d.name, COUNT(*) AS joined_rows, COUNT(p.id) AS patch_count
+FROM developers AS d
+LEFT JOIN patches AS p ON p.developer_id = d.id
+WHERE d.name = 'Iris'
+GROUP BY d.id, d.name;
+name | joined_rows | patch_count
+-----+-------------+------------
+Iris | 1           | 0
+
+PASS joins
+
+=== subqueries ===
+
+Q12 step 1: calculate the average
+
+SELECT AVG(lines_changed) AS avg_lines FROM patches;
+avg_lines
+------------------
+181.08333333333334
+
+Q12 step 2: compare each patch against the average
+
+SELECT id, title, lines_changed
+FROM patches
+WHERE lines_changed > (SELECT AVG(lines_changed) FROM patches)
+ORDER BY lines_changed DESC;
+id | title                              | lines_changed
+---+------------------------------------+--------------
+7  | v3dv input attachment TLB read     | 402
+6  | v3d int64 lowering                 | 318
+11 | v3dv dynamic rendering local read  | 287
+2  | v3d incremental liveness           | 241
+8  | v3d register allocation spill cost | 211
+1  | v3dv render pass compatibility     | 184
+
+Q13 step 1: inspect reviews for patch 1 and patch 11
+
+SELECT 1 FROM reviews AS r WHERE r.patch_id = 1;
+1
+-
+1
+
+SELECT 1 FROM reviews AS r WHERE r.patch_id = 11;
+(no rows)
+
+Q13 step 2: NOT EXISTS keeps the patch with no review
+
+SELECT p.id, p.title
+FROM patches AS p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM reviews AS r
+    WHERE r.patch_id = p.id
+)
+ORDER BY p.id;
+id | title
+---+----------------------------------
+11 | v3dv dynamic rendering local read
+
+PASS subqueries
+
+=== constraints ===
+
+PRAGMA foreign_keys;
+foreign_keys
+------------
+1
+
+INSERT INTO patches VALUES (999, 999, 'FK example', 'v3d', 'open', '2026-11-24', 1);
+FOREIGN KEY: FOREIGN KEY constraint failed
+
+INSERT INTO developers VALUES (11, 'Example', NULL, '2026-11-24');
+NOT NULL: NOT NULL constraint failed: developers.role
+
+INSERT INTO developers VALUES (11, 'Jae', 'driver', '2026-11-24');
+UNIQUE: UNIQUE constraint failed: developers.name
+
+INSERT INTO patches VALUES (999, 1, 'CHECK example', 'v3d', 'open', '2026-11-24', -1);
+CHECK: CHECK constraint failed: lines_changed >= 0
+
+LEFT JOIN aggregate: COALESCE converts NULL to zero
+
+SELECT d.name, SUM(p.lines_changed) AS raw_sum,
+       COALESCE(SUM(p.lines_changed), 0) AS total_lines_changed
+FROM developers AS d
+LEFT JOIN patches AS p ON p.developer_id = d.id
+WHERE d.name = 'Iris'
+GROUP BY d.id, d.name;
+name | raw_sum | total_lines_changed
+-----+---------+--------------------
+Iris | None    | 0
+
+PASS constraints

@@ -1,0 +1,31 @@
+PASS  Q01  review/open 상태인 patch를 확인한다. [기본 조회: WHERE]
+PASS  Q02  변경 줄 수가 큰 patch 상위 5개를 확인한다. [기본 조회: ORDER BY, LIMIT]
+PASS  Q03  v3dv component의 patch만 생성 순서로 확인한다. [기본 조회: WHERE, ORDER BY]
+PASS  Q04  실패가 발생한 test run을 실패 개수 순으로 확인한다. [기본 조회: WHERE, ORDER BY]
+PASS  Q05  patch와 작성자를 연결해 누가 어떤 patch를 만들었는지 확인한다. [INNER JOIN]
+PASS  Q06  test run과 patch를 연결해 실패한 test의 patch 제목을 확인한다. [INNER JOIN]
+PASS  Q07  patch가 없는 개발자도 포함해 개발자별 patch 개수를 확인한다. [LEFT JOIN]
+PASS  Q08  review와 patch/reviewer를 연결해 review 이력을 확인한다. [INNER JOIN]
+PASS  Q09  상태별 patch 개수를 센다. [집계: COUNT, GROUP BY]
+PASS  Q10  장치별 평균 test 실행 시간을 구한다. [집계: AVG, GROUP BY]
+PASS  Q11  개발자별 총 변경 줄 수를 구한다. [집계: SUM, GROUP BY]
+PASS  Q12  평균보다 변경 줄 수가 큰 patch를 찾는다. [서브쿼리]
+PASS  Q13  review가 아직 하나도 없는 patch를 찾는다. [서브쿼리: NOT EXISTS]
+PASS  Q14  review 중이던 patch 2를 merged 상태로 바꾼다. [UPDATE]
+PASS  Q15  재실행 대상이라고 가정한 test run 14를 삭제한다. [DELETE]
+PASS  Q16  component/status 조건 검색을 위한 복합 인덱스를 만든다. [INDEX]
+
+16/16 queries executed
+table rows: developers=10, patches=12, test_runs=13, reviews=12
+foreign key rejection: PASS
+results: /home/ljh/self-os/Codyssey/database/results
+PASS  developers_rows >= 10
+PASS  patches_rows >= 10
+PASS  test_runs_rows >= 10
+PASS  reviews_rows >= 10
+PASS  foreign_keys (4)
+PASS  constraints
+PASS  required_query_categories
+PASS  captured_results (16)
+
+SQL assignment CTS: PASS
