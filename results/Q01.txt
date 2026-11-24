@@ -1,0 +1,18 @@
+Q01: review/open 상태인 patch를 확인한다. [기본 조회: WHERE]
+
+SQL:
+SELECT id, title, component, status
+FROM patches
+WHERE status IN ('open', 'review')
+ORDER BY id;
+
+RESULT:
+id | title                              | component | status
+---+------------------------------------+-----------+-------
+1  | v3dv render pass compatibility     | v3dv      | review
+2  | v3d incremental liveness           | v3d       | review
+6  | v3d int64 lowering                 | v3d       | open  
+7  | v3dv input attachment TLB read     | v3dv      | review
+8  | v3d register allocation spill cost | v3d       | open  
+11 | v3dv dynamic rendering local read  | v3dv      | open  
+12 | v3d tessellation patch id mapping  | v3d       | review

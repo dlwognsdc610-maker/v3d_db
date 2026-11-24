@@ -1,0 +1,8 @@
+Q15: 재실행 대상이라고 가정한 test run 14를 삭제한다. [DELETE]
+
+SQL:
+DELETE FROM test_runs
+WHERE id = 14;
+
+RESULT:
+affected_rows: 1

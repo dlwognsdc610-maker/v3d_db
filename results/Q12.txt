@@ -1,0 +1,17 @@
+Q12: 평균보다 변경 줄 수가 큰 patch를 찾는다. [서브쿼리]
+
+SQL:
+SELECT id, title, lines_changed
+FROM patches
+WHERE lines_changed > (SELECT AVG(lines_changed) FROM patches)
+ORDER BY lines_changed DESC;
+
+RESULT:
+id | title                              | lines_changed
+---+------------------------------------+--------------
+7  | v3dv input attachment TLB read     | 402          
+6  | v3d int64 lowering                 | 318          
+11 | v3dv dynamic rendering local read  | 287          
+2  | v3d incremental liveness           | 241          
+8  | v3d register allocation spill cost | 211          
+1  | v3dv render pass compatibility     | 184          

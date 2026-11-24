@@ -1,0 +1,23 @@
+Q05: patch와 작성자를 연결해 누가 어떤 patch를 만들었는지 확인한다. [INNER JOIN]
+
+SQL:
+SELECT p.id, p.title, d.name AS author, p.status
+FROM patches AS p
+INNER JOIN developers AS d ON d.id = p.developer_id
+ORDER BY p.id;
+
+RESULT:
+id | title                               | author | status   
+---+-------------------------------------+--------+----------
+1  | v3dv render pass compatibility      | Jae    | review   
+2  | v3d incremental liveness            | Mina   | review   
+3  | vc4 release blit temporary resource | Alex   | merged   
+4  | softpipe NIR execution cleanup      | Sam    | merged   
+5  | v3dv host cached memory import      | Lena   | merged   
+6  | v3d int64 lowering                  | Theo   | open     
+7  | v3dv input attachment TLB read      | Jae    | review   
+8  | v3d register allocation spill cost  | Mina   | open     
+9  | vc4 flush resource context cleanup  | Alex   | merged   
+10 | softpipe interpreter branch cleanup | Sam    | abandoned
+11 | v3dv dynamic rendering local read   | Lena   | open     
+12 | v3d tessellation patch id mapping   | Theo   | review   

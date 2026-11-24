@@ -1,0 +1,14 @@
+Q10: 장치별 평균 test 실행 시간을 구한다. [집계: AVG, GROUP BY]
+
+SQL:
+SELECT device, ROUND(AVG(duration_sec), 2) AS avg_duration_sec
+FROM test_runs
+GROUP BY device
+ORDER BY device;
+
+RESULT:
+device | avg_duration_sec
+-------+-----------------
+RPi4   | 53.95           
+RPi5   | 60.51           
+x86    | 68.1            

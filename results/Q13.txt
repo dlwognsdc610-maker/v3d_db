@@ -1,0 +1,16 @@
+Q13: review가 아직 하나도 없는 patch를 찾는다. [서브쿼리: NOT EXISTS]
+
+SQL:
+SELECT p.id, p.title
+FROM patches AS p
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM reviews AS r
+    WHERE r.patch_id = p.id
+)
+ORDER BY p.id;
+
+RESULT:
+id | title                            
+---+----------------------------------
+11 | v3dv dynamic rendering local read

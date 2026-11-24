@@ -1,0 +1,22 @@
+Q11: 개발자별 총 변경 줄 수를 구한다. [집계: SUM, GROUP BY]
+
+SQL:
+SELECT d.name, COALESCE(SUM(p.lines_changed), 0) AS total_lines_changed
+FROM developers AS d
+LEFT JOIN patches AS p ON p.developer_id = d.id
+GROUP BY d.id, d.name
+ORDER BY total_lines_changed DESC, d.id;
+
+RESULT:
+name | total_lines_changed
+-----+--------------------
+Jae  | 586                
+Theo | 477                
+Mina | 452                
+Lena | 383                
+Sam  | 199                
+Alex | 76                 
+Iris | 0                  
+Noah | 0                  
+Jun  | 0                  
+Maya | 0                  

@@ -1,0 +1,22 @@
+Q07: patch가 없는 개발자도 포함해 개발자별 patch 개수를 확인한다. [LEFT JOIN]
+
+SQL:
+SELECT d.name, COUNT(p.id) AS patch_count
+FROM developers AS d
+LEFT JOIN patches AS p ON p.developer_id = d.id
+GROUP BY d.id, d.name
+ORDER BY d.id;
+
+RESULT:
+name | patch_count
+-----+------------
+Jae  | 2          
+Mina | 2          
+Alex | 2          
+Iris | 0          
+Sam  | 2          
+Noah | 0          
+Lena | 2          
+Jun  | 0          
+Maya | 0          
+Theo | 2          

@@ -1,0 +1,9 @@
+Q14: review 중이던 patch 2를 merged 상태로 바꾼다. [UPDATE]
+
+SQL:
+UPDATE patches
+SET status = 'merged'
+WHERE id = 2;
+
+RESULT:
+affected_rows: 1

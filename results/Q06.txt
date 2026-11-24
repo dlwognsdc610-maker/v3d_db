@@ -1,0 +1,21 @@
+Q06: test run과 patch를 연결해 실패한 test의 patch 제목을 확인한다. [INNER JOIN]
+
+SQL:
+SELECT t.id, p.title, t.device, t.suite, t.failed
+FROM test_runs AS t
+INNER JOIN patches AS p ON p.id = t.patch_id
+WHERE t.failed > 0
+ORDER BY t.failed DESC, t.id;
+
+RESULT:
+id | title                               | device | suite            | failed
+---+-------------------------------------+--------+------------------+-------
+12 | v3dv dynamic rendering local read   | RPi5   | vkcts-dynamic    | 8     
+7  | v3d int64 lowering                  | RPi5   | vkcts-int64      | 7     
+14 | v3d tessellation patch id mapping   | RPi4   | vkcts-tess       | 5     
+2  | v3dv render pass compatibility      | RPi4   | vkcts-renderpass | 4     
+11 | softpipe interpreter branch cleanup | x86    | nir-exec         | 3     
+13 | v3d tessellation patch id mapping   | RPi5   | vkcts-tess       | 2     
+1  | v3dv render pass compatibility      | RPi5   | vkcts-renderpass | 1     
+5  | softpipe NIR execution cleanup      | x86    | nir-exec         | 1     
+8  | v3dv input attachment TLB read      | RPi5   | vkcts-input      | 1     

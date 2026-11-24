@@ -1,0 +1,15 @@
+Q09: 상태별 patch 개수를 센다. [집계: COUNT, GROUP BY]
+
+SQL:
+SELECT status, COUNT(*) AS patch_count
+FROM patches
+GROUP BY status
+ORDER BY status;
+
+RESULT:
+status    | patch_count
+----------+------------
+abandoned | 1          
+merged    | 4          
+open      | 3          
+review    | 4          

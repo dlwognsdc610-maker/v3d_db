@@ -1,0 +1,15 @@
+Q03: v3dv component의 patch만 생성 순서로 확인한다. [기본 조회: WHERE, ORDER BY]
+
+SQL:
+SELECT id, title, status, created_at
+FROM patches
+WHERE component = 'v3dv'
+ORDER BY created_at;
+
+RESULT:
+id | title                             | status | created_at         
+---+-----------------------------------+--------+--------------------
+5  | v3dv host cached memory import    | merged | 2026-08-24 16:30:00
+1  | v3dv render pass compatibility    | review | 2026-08-28 10:00:00
+7  | v3dv input attachment TLB read    | review | 2026-09-05 08:05:00
+11 | v3dv dynamic rendering local read | open   | 2026-09-07 18:43:00

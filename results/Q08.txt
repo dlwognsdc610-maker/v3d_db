@@ -1,0 +1,24 @@
+Q08: review와 patch/reviewer를 연결해 review 이력을 확인한다. [INNER JOIN]
+
+SQL:
+SELECT r.id, p.title, d.name AS reviewer, r.verdict
+FROM reviews AS r
+INNER JOIN patches AS p ON p.id = r.patch_id
+INNER JOIN developers AS d ON d.id = r.reviewer_id
+ORDER BY r.id;
+
+RESULT:
+id | title                               | reviewer | verdict          
+---+-------------------------------------+----------+------------------
+1  | v3dv render pass compatibility      | Iris     | changes_requested
+2  | v3d incremental liveness            | Jun      | approved         
+3  | vc4 release blit temporary resource | Iris     | approved         
+4  | softpipe NIR execution cleanup      | Jun      | comment          
+5  | v3dv host cached memory import      | Iris     | approved         
+6  | v3d int64 lowering                  | Jun      | changes_requested
+7  | v3dv input attachment TLB read      | Iris     | changes_requested
+8  | v3d register allocation spill cost  | Jun      | comment          
+9  | vc4 flush resource context cleanup  | Iris     | approved         
+10 | softpipe interpreter branch cleanup | Jun      | comment          
+11 | v3d tessellation patch id mapping   | Iris     | comment          
+12 | v3d incremental liveness            | Iris     | approved         
